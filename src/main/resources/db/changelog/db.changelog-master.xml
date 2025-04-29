@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="danieljaraba">
+        <createTable tableName="examples">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="danieljaraba">
+        <insert tableName="examples">
+            <column name="id" value="test"/>
+            <column name="message" value="Hello World!"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="3" author="luispinillos_juanmadrid">
+        <createTable tableName="role">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="description" type="VARCHAR(4000)"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="luispinillos_juanmadrid">
+        <createTable tableName="permissions">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="luispinillos_juanmadrid">
+        <createTable tableName="team">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="name_abbreviation" type="VARCHAR(4000)"/>
+            <column name="team_flag" type="VARCHAR(4000)"/>
+            <column name="points" type="INTEGER"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="luispinillos_juanmadrid">
+        <createTable tableName="organization">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nit" type="VARCHAR(4000)"/>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="email" type="VARCHAR(4000)"/>
+            <column name="logo" type="VARCHAR(4000)"/>
+            <column name="phone" type="VARCHAR(4000)"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="themes" type="VARCHAR(4000)"/>
+            <column name="banner" type="VARCHAR(4000)"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7" author="luispinillos_juanmadrid">
+        <createTable tableName="user_account">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(4000)"/>
+            <column name="phone" type="VARCHAR(4000)"/>
+            <column name="age" type="SMALLINT"/>
+            <column name="have_fa" type="CHAR(36)"/>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="nickname" type="VARCHAR(4000)"/>
+            <column name="password" type="VARCHAR(4000)"/>
+            <column name="photo" type="VARCHAR(4000)"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="role_uuid" type="CHAR(36)"/>
+            <column name="otp" type="VARCHAR(4000)"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="user_account" baseColumnNames="role_uuid"
+                                 constraintName="fk_user_account_role"
+                                 referencedTableName="role" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="8" author="luispinillos_juanmadrid">
+        <createTable tableName="tournament">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="organization_uuid" type="CHAR(36)"/>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="starting_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="ending_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="state" type="CHAR(1)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="tournament" baseColumnNames="organization_uuid"
+                                 constraintName="fk_tournament_organization"
+                                 referencedTableName="organization" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="9" author="luispinillos_juanmadrid">
+        <createTable tableName="role_permissions">
+            <column name="role_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permissions_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="role_permissions" columnNames="role_uuid, permissions_uuid"/>
+        <addForeignKeyConstraint baseTableName="role_permissions" baseColumnNames="role_uuid"
+                                 constraintName="fk_role_permissions_role"
+                                 referencedTableName="role" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="role_permissions" baseColumnNames="permissions_uuid"
+                                 constraintName="fk_role_permissions_permissions"
+                                 referencedTableName="permissions" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="10" author="luispinillos_juanmadrid">
+        <createTable tableName="user_organization">
+            <column name="organization_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_points" type="INTEGER"/>
+        </createTable>
+        <addPrimaryKey tableName="user_organization" columnNames="organization_uuid, user_uuid"/>
+        <addForeignKeyConstraint baseTableName="user_organization" baseColumnNames="organization_uuid"
+                                 constraintName="fk_user_organization_organization"
+                                 referencedTableName="organization" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="user_organization" baseColumnNames="user_uuid"
+                                 constraintName="fk_user_organization_user"
+                                 referencedTableName="user_account" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="11" author="luispinillos_juanmadrid">
+        <createTable tableName="user_organization_role">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_uuid" type="CHAR(36)"/>
+            <column name="organization_uuid" type="CHAR(36)"/>
+            <column name="role_uuid" type="CHAR(36)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="user_organization_role" baseColumnNames="user_uuid"
+                                 constraintName="fk_user_organization_role_user"
+                                 referencedTableName="user_account" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="user_organization_role" baseColumnNames="organization_uuid"
+                                 constraintName="fk_user_organization_role_organization"
+                                 referencedTableName="organization" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="user_organization_role" baseColumnNames="role_uuid"
+                                 constraintName="fk_user_organization_role_role"
+                                 referencedTableName="role" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="12" author="luispinillos_juanmadrid">
+        <createTable tableName="tournament_phase">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="tournament_uuid" type="CHAR(36)"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="tournament_phase" baseColumnNames="tournament_uuid"
+                                 constraintName="fk_tournament_phase_tournament"
+                                 referencedTableName="tournament" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="13" author="luispinillos_juanmadrid">
+        <createTable tableName="team_phase">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="actual_phase" type="VARCHAR(4000)"/>
+            <column name="state" type="CHAR(1)"/>
+            <column name="team_uuid" type="CHAR(36)"/>
+            <column name="tournament_phase_uuid" type="CHAR(36)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="team_phase" baseColumnNames="team_uuid"
+                                 constraintName="fk_team_phase_team"
+                                 referencedTableName="team" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="team_phase" baseColumnNames="tournament_phase_uuid"
+                                 constraintName="fk_team_phase_tournament_phase"
+                                 referencedTableName="tournament_phase" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="14" author="luispinillos_juanmadrid">
+        <createTable tableName="game">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="starting_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="total_yellow_cards" type="INTEGER"/>
+            <column name="total_red_cards" type="INTEGER"/>
+            <column name="phase" type="VARCHAR(4000)"/>
+            <column name="tournament_uuid" type="CHAR(36)"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="game" baseColumnNames="tournament_uuid"
+                                 constraintName="fk_game_tournament"
+                                 referencedTableName="tournament" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="15" author="luispinillos_juanmadrid">
+        <createTable tableName="football_pool">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="state" type="CHAR(1)"/>
+            <column name="tournament_uuid" type="CHAR(36)"/>
+            <column name="champions_win_points" type="INTEGER"/>
+            <column name="second_place_win_points" type="INTEGER"/>
+            <column name="third_place_win_points" type="INTEGER"/>
+            <column name="winner_team_win_points" type="INTEGER"/>
+            <column name="total_yellow_cards_win_points" type="INTEGER"/>
+            <column name="total_red_cards_win_points" type="INTEGER"/>
+            <column name="total_local_goals_win_points" type="INTEGER"/>
+            <column name="total_visiting_goal_win_points" type="INTEGER"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="football_pool" baseColumnNames="tournament_uuid"
+                                 constraintName="fk_football_pool_tournament"
+                                 referencedTableName="tournament" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="16" author="luispinillos_juanmadrid">
+        <createTable tableName="prize">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="image" type="VARCHAR(4000)"/>
+            <column name="organization_uuid" type="CHAR(36)"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="prize" baseColumnNames="organization_uuid"
+                                 constraintName="fk_prize_organization"
+                                 referencedTableName="organization" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="17" author="luispinillos_juanmadrid">
+        <createTable tableName="game_team">
+            <column name="game_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(4000)"/>
+            <column name="goals" type="INTEGER"/>
+        </createTable>
+        <addPrimaryKey tableName="game_team" columnNames="game_uuid, team_uuid"/>
+        <addForeignKeyConstraint baseTableName="game_team" baseColumnNames="game_uuid"
+                                 constraintName="fk_game_team_game"
+                                 referencedTableName="game" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="game_team" baseColumnNames="team_uuid"
+                                 constraintName="fk_game_team_team"
+                                 referencedTableName="team" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="18" author="luispinillos_juanmadrid">
+        <createTable tableName="sub_football_pool">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(4000)"/>
+            <column name="creation_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_updated" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="url" type="VARCHAR(4000)"/>
+            <column name="football_pool_uuid" type="CHAR(36)"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="sub_football_pool" baseColumnNames="football_pool_uuid"
+                                 constraintName="fk_sub_football_pool_football_pool"
+                                 referencedTableName="football_pool" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="19" author="luispinillos_juanmadrid">
+        <createTable tableName="general_bet">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="champion" type="VARCHAR(4000)"/>
+            <column name="second_place" type="VARCHAR(4000)"/>
+            <column name="third_place" type="VARCHAR(4000)"/>
+            <column name="football_pool_uuid" type="CHAR(36)"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="general_bet" baseColumnNames="football_pool_uuid"
+                                 constraintName="fk_general_bet_football_pool"
+                                 referencedTableName="football_pool" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="20" author="luispinillos_juanmadrid">
+        <createTable tableName="game_bet">
+            <column name="uuid" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="winner_team" type="VARCHAR(4000)"/>
+            <column name="total_yellow_cards" type="INTEGER"/>
+            <column name="total_red_cards" type="INTEGER"/>
+            <column name="total_local_goals" type="INTEGER"/>
+            <column name="total_visiting_goals" type="INTEGER"/>
+            <column name="state" type="VARCHAR(4000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="21" author="luispinillos_juanmadrid">
+        <createTable tableName="game_bet_game">
+            <column name="game_bet_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="game_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="game_bet_game" columnNames="game_bet_uuid, game_uuid"/>
+        <addForeignKeyConstraint baseTableName="game_bet_game" baseColumnNames="game_bet_uuid"
+                                 constraintName="fk_game_bet_game_game_bet"
+                                 referencedTableName="game_bet" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="game_bet_game" baseColumnNames="game_uuid"
+                                 constraintName="fk_game_bet_game_game"
+                                 referencedTableName="game" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="22" author="luispinillos_juanmadrid">
+        <createTable tableName="user_bet">
+            <column name="user_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="game_bet_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="user_bet" columnNames="user_uuid, game_bet_uuid"/>
+        <addForeignKeyConstraint baseTableName="user_bet" baseColumnNames="user_uuid"
+                                 constraintName="fk_user_bet_user_account"
+                                 referencedTableName="user_account" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="user_bet" baseColumnNames="game_bet_uuid"
+                                 constraintName="fk_user_bet_game_bet"
+                                 referencedTableName="game_bet" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="23" author="luispinillos_juanmadrid">
+        <createTable tableName="user_general_bet">
+            <column name="general_bet_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="user_general_bet" columnNames="general_bet_uuid, user_uuid"/>
+        <addForeignKeyConstraint baseTableName="user_general_bet" baseColumnNames="general_bet_uuid"
+                                 constraintName="fk_user_general_bet_general_bet"
+                                 referencedTableName="general_bet" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="user_general_bet" baseColumnNames="user_uuid"
+                                 constraintName="fk_user_general_bet_user_account"
+                                 referencedTableName="user_account" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="24" author="luispinillos_juanmadrid">
+        <createTable tableName="user_sub_football_pool">
+            <column name="user_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_football_pool_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="user_sub_football_pool" columnNames="user_uuid, sub_football_pool_uuid"/>
+        <addForeignKeyConstraint baseTableName="user_sub_football_pool" baseColumnNames="user_uuid"
+                                 constraintName="fk_user_sub_football_pool_user_account"
+                                 referencedTableName="user_account" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="user_sub_football_pool" baseColumnNames="sub_football_pool_uuid"
+                                 constraintName="fk_user_sub_football_pool_sub_football_pool"
+                                 referencedTableName="sub_football_pool" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="25" author="claude">
+        <createTable tableName="user_tournament">
+            <column name="tournament_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_uuid" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="user_tournament" columnNames="tournament_uuid, user_uuid"/>
+        <addForeignKeyConstraint baseTableName="user_tournament" baseColumnNames="tournament_uuid"
+                                 constraintName="fk_user_tournament_tournament"
+                                 referencedTableName="tournament" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="user_tournament" baseColumnNames="user_uuid"
+                                 constraintName="fk_user_tournament_user_account"
+                                 referencedTableName="user_account" referencedColumnNames="uuid"/>
+    </changeSet>
+</databaseChangeLog>
